@@ -1,0 +1,33 @@
+Sistema Varejo - Objetivo
+Criar um pequeno sistema de Loja Online com clientes e produtos, aplicando todos os
+conceitos básicos de orientação a objetos em Java.
+
+1ª Etapa – Desenvolvimento (2h15 min)
+1. Classe Cliente
+○ Atributos privados: nome, email.
+○ Construtor para inicializar.
+○ Métodos getters e setters.
+
+2. Interface OperacoesProduto
+● public interface OperacoesProduto {
+● void aplicarDesconto(double percentual);
+● void aumentarPreco(double percentual);
+● }
+
+3. Classe Produto (abstrata)
+○ Atributos privados: codigo, nome, preco, Cliente comprador.
+○ Construtor para inicializar.
+○ Métodos para aplicar desconto e aumento de preço.
+○ Método abstrato calcularFrete().
+
+4. Classe ProdutoFisico (herda de Produto)
+○ Implementar calcularFrete() → frete fixo de R$ 20,00.
+
+5. Classe ProdutoDigital (herda de Produto)
+○ Implementar calcularFrete() → não tem frete (frete = 0).
+
+6. Classe Main
+○ Criar um cliente.
+○ Criar um Produto Físico e um Produto Digital para esse cliente.
+○ Fazer algumas operações (aplicar desconto, aumentar preço, calcular frete).
+○ Mostrar os preços finais no console.

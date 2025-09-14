@@ -1,0 +1,37 @@
+Sistema Bancário
+
+Objetivo
+Criar um pequeno sistema bancário com contas e clientes, aplicando todos os conceitos
+básicos de orientação a objetos em Java.
+
+1ª Etapa – Desenvolvimento (2h15 min)
+- Implemente as seguintes classes
+
+1. Classe Cliente
+● Atributos privados: nome, cpf.
+● Construtor para inicializar.
+● Métodos getters e setters.
+
+2. Interface OperacoesBancarias
+public interface OperacoesBancarias {
+void depositar(double valor);
+void sacar(double valor);
+}
+
+3. Classe Conta (abstrata)
+● Atributos privados: numeroConta, saldo, Cliente titular.
+● Construtor para inicializar.
+● Implementa métodos de depositar e sacar.
+● Método abstrato aplicarJuros().
+
+4. Classe ContaCorrente (herda de Conta)
+● Implementar aplicarJuros() → não faz nada, apenas mensagem.
+
+5. Classe ContaPoupanca (herda de Conta)
+● Implementar aplicarJuros() → saldo = saldo * 1.01 (juros de 1%).
+
+6. Classe Main
+● Criar um cliente.
+● Criar uma Conta Corrente e uma Conta Poupança para ele.
+● Fazer algumas operações (depósito, saque, aplicar juros).
+● Mostrar os saldos no console.
