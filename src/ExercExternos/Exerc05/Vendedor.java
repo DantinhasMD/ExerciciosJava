@@ -129,6 +129,6 @@ public class Vendedor extends Usuario{
 
     @Override
     public void realizarLogoff(){
-        setAdministrador(false);
+        setLogado(false);
     }
 }

@@ -20,7 +20,6 @@ package TratamentoDeExcecoes;
 import java.util.Scanner;
 
 public class Tratamento02 {
-
     public static void calcularMediaMovel(double[] precos){
         if (precos.length < 3) {
             throw new IllegalArgumentException("É necessário pelo menos 3 valores para calcular a média móvel.");

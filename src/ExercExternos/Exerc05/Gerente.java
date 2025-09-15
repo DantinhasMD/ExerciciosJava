@@ -1,6 +1,6 @@
 package ExercExternos.Exerc05;
 
-import java.util.Scanner;
+import java.util.*;
 
 public class Gerente extends Usuario{
     public Gerente(String nome, String email, String senha){
@@ -57,10 +57,12 @@ public class Gerente extends Usuario{
 
                 case 3:
                     System.out.println("Consultando vendas...");
+                    consultarVendas();
                     break;
 
                 case 4:
                     System.out.println("Gerando relatório...");
+                    gerarRelatorioFinanceiro();
                     break;
 
                 case 5:
@@ -113,16 +115,29 @@ public class Gerente extends Usuario{
 
 
     public void gerarRelatorioFinanceiro(){
-
+        System.out.println("\n=== RELATÓRIO FINANCEIRO POR DIA ===");
+        List<Double> caixas = SistemaVendas.getCaixaPorDia();
+        for (int dia = 0; dia < caixas.size(); dia++) {
+            double totalDia = caixas.get(dia);
+            System.out.println("\nDia " + (dia+1) + " - Total do Caixa: R$ " + totalDia);
+            System.out.println("Vendas do dia:");
+            for (Venda v : SistemaVendas.getTodasAsVendas()) {
+                if (v.getDia() == dia+1) {
+                    System.out.println("  " + v);
+                }
+            }
+        }
     }
 
-
     public void consultarVendas(){
-
+        System.out.println("\n=== VENDAS REALIZADAS ===");
+        for (Venda v : SistemaVendas.getTodasAsVendas()) {
+            System.out.println(v); // imprime nome do vendedor, número da venda, valor e dia
+        }
     }
 
     @Override
     public void realizarLogoff(){
-        setAdministrador(false);
+        setLogado(false);
     }
 }

@@ -108,7 +108,7 @@ public class Atendente extends Usuario{
     public void receberPagamentos(List<Venda> vendas){
         for (Venda v : vendas) {
             if (!v.isPago()) {
-                v.receberPagamento();
+                v.receberPagamento(SistemaVendas.getDiaAtual());
                 valorEmCaixa += v.getValor();
                 v.setPago(true);
             }
@@ -137,10 +137,11 @@ public class Atendente extends Usuario{
         SistemaVendas.registrarCaixaDoDia(valorEmCaixa);
         System.out.println("Caixa fechado do dia: R$ " + valorEmCaixa);
         valorEmCaixa = 0;
+        SistemaVendas.proximoDia();
     }
 
     @Override
     public void realizarLogoff(){
-        setAdministrador(false);
+        setLogado(false);
     }
 }
