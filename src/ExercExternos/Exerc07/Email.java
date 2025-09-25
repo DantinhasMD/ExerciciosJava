@@ -1,6 +1,5 @@
 package ExercExternos.Exerc07;
 
-import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Email extends Mensagem{
