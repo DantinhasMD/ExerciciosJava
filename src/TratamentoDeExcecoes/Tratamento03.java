@@ -15,6 +15,41 @@ Erro: Valor inválido encontrado na célula [0][2]: 1.1
 
 package TratamentoDeExcecoes;
 
-public class Tratamento03 {
+import java.util.Scanner;
 
+public class Tratamento03 {
+    public static void verificarValores(double[][] valores){
+        for (int i = 0; i < valores.length; i++) {
+            for (int j = 0; j < valores[i].length; j++) {
+                double valor = valores[i][j];
+                if (valor < 0 || valor > 1) {
+                    System.out.printf("Erro: Valor inválido encontrado na célula [%d][%d]: %.1f\n", i,j, valor);
+                }
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        double[][] valores = new double[2][5];
+
+        System.out.println("Digite os valores da planilha de riscos:");
+
+        try {
+            for (int i = 0; i < valores.length; i++) {
+                for (int j = 0; j < valores[i].length; j++){
+                    System.out.print("Tabela " + (i + 1) + "-Coluna  " + (j + 1) + ": ");
+                    double entrada = sc.nextDouble();
+                    valores[i][j] = entrada;
+                }
+            }
+
+            verificarValores(valores);
+
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("Erro: Matriz Incompleta. Complete-a.");
+        }
+
+        sc.close();
+    }
 }
