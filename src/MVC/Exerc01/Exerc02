@@ -1,0 +1,7 @@
+Exercícios para fixação:
+
+    1 - Adapte o sistema para não permitir emails repetidos.
+    2 - Adicione um campo CPF e valide se possui 11 dígitos.
+    3 - Mostre a quantidade total de clientes após cada listagem.
+
+
