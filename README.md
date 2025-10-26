@@ -51,3 +51,6 @@ Esse repositório serve como um registro do meu progresso e aprendizado em Java,
 ---
 
 📍 *Desenvolvido com dedicação por [DantinhasMD](https://github.com/DantinhasMD)* ☕
+
+## Complementares
+<img width="868" height="612" alt="image" src="https://github.com/user-attachments/assets/06ec5cb0-9ae7-4ea5-8209-1f66a71ca41c" />
