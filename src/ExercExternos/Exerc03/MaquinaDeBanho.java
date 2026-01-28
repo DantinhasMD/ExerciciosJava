@@ -50,7 +50,7 @@ public class MaquinaDeBanho {
         this.ocupado = ocupado;
     }
 
-    //Metodos
+    //Residencia.Metodos
     public void banhoPet(){
         if (isOcupado() && getCapacidadeAgua() >= 10 && getCapacidadeShampoo() >= 2 && isLimpa()){
             System.out.println("Pet tomou banho!");

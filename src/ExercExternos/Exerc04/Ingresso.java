@@ -38,7 +38,7 @@ public class Ingresso {
         this.valor = valor;
     }
 
-    //Metodos
+    //Residencia.Metodos
     public double getValorReal() {
         return valor;
     }

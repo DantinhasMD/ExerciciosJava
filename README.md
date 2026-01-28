@@ -10,13 +10,13 @@ Aqui estão reunidos exercícios, desafios, projetos e hackathons que estou dese
 - **Métodos**
     - 20 exercícios resolvidos com enunciado e minha solução.
 
-- **Vetores**
+- **Residencia.Vetores**
     - 50 exercícios resolvidos com enunciado e minha solução.
 
 - **Coleções**
     - 6 exercícios planejados (ainda não iniciados — podem surgir mais).
 
-- **POO (Programação Orientada a Objetos)**
+- **Residencia.POO (Programação Orientada a Objetos)**
     - 36 exercícios resolvidos com enunciado e minha solução.
 
 - **Tratamento de Erros**

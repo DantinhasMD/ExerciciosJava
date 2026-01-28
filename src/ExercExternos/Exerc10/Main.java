@@ -1,4 +1,5 @@
 package ExercExternos.Exerc10;
 
-public class Min {
+public class Main {
+
 }

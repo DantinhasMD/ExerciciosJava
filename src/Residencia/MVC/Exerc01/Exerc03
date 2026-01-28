@@ -1,0 +1,54 @@
+Objetivos de aprendizagem
+    - Conectar uma aplicação Java ao MySQL remoto (Aiven).
+    - Executar operações CRUD reais via JDBC.
+    - Reforçar segurança (uso de PreparedStatement e try-with-resources).
+    - Compreender a diferença entre camada de serviço e persistência.
+
+⚙️ Requisitos de Ambiente
+Antes de começar, cada aluno deve ter:
+ ✅ Java JDK 17+
+ ✅ IntelliJ IDEA ou VS Code com Java
+ ✅ Gradle (ou Maven, se preferir)
+ ✅ Conta Aiven com um banco MySQL criado
+ ✅ DBeaver (ou outro cliente SQL) para testar queries
+
+📦 Dependência JDBC (no build.gradle)
+    dependencies {
+        implementation 'mysql:mysql-connector-java:8.0.33'
+    }
+
+    (ou Maven, se usarem pom.xml):
+    <dependency>
+        <groupId>mysql</groupId>
+        <artifactId>mysql-connector-java</artifactId>
+        <version>8.0.33</version>
+    </dependency>
+
+
+🧱 Estrutura de diretórios
+    src/
+     ├── model/
+     │    └── Cliente.java
+     ├── dao/
+     │    ├── ConnectionFactory.java
+     │    └── ClienteDAO.java
+     ├── service/
+     │    └── ClienteService.java
+     └── Main.java
+
+
+🗃️ Criar tabela no MySQL Aiven
+Execute no DBeaver (ou outro cliente SQL):
+    CREATE TABLE clientes (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        nome VARCHAR(100) NOT NULL,
+        email VARCHAR(100),
+        telefone VARCHAR(20)
+    );
+
+
+🧠 Exercícios de fixação
+    - Implemente a busca por nome também no banco (WHERE nome LIKE ?).
+    - Mostre quantos clientes foram retornados na listagem.
+    - Adicione um campo cpf na tabela e valide antes do insert.
+    - Crie uma função que exporte os clientes para um .csv.

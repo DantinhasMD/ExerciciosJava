@@ -1,0 +1,14 @@
+Implemente um sistema de CRUD de clientes via teclado, que funcione inteiramente
+em memória (sem banco de dados). O programa deve permitir ao usuário escolher,
+em um menu, uma das seguintes operações:
+ 1️⃣ Criar cliente
+ 2️⃣ Listar clientes
+ 3️⃣ Atualizar cliente
+ 4️⃣ Remover cliente
+ 0️⃣ Sair
+Cada cliente deve possuir os seguintes campos:
+    - id (inteiro, gerado automaticamente), nome, email,telefone
+
+    1. Ordenar a lista por nome antes de exibir.
+    2. Validar campos (não permitir nome vazio).
+    3. Criar um submenu de busca por nome ou ID.
