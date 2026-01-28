@@ -13,6 +13,9 @@ MODEL = "llama3-8b-8192"
 # =========================================
 
 # ---------- NIVEL ----------
+if not GROQ_API_KEY:
+    raise RuntimeError("GROQ_API_KEY não encontrada nas variáveis de ambiente")
+
 if not os.path.exists(NIVEL_FILE):
     nivel_data = {
         "nivel_atual": "iniciante",
@@ -79,7 +82,14 @@ response = requests.post(
     }
 )
 
-content = response.json()["choices"][0]["message"]["content"]
+data = response.json()
+
+if "choices" not in data:
+    raise RuntimeError(
+        f"Erro ao gerar desafio via Groq API: {json.dumps(data, indent=2)}"
+    )
+
+content = data["choices"][0]["message"]["content"]
 challenge_data = json.loads(content)
 
 # ---------- JAVA FILE ----------
