@@ -30,7 +30,7 @@ else:
 
 nivel_data["exercicios_desde_analise"] += 1
 
-if nivel_data["exercicios_desde_analise"] >= 30:
+if nivel_data["exercicios_desde_analise"] >= 90:
     if nivel_data["nivel_atual"] == "iniciante":
         nivel_data["nivel_atual"] = "intermediario"
     elif nivel_data["nivel_atual"] == "intermediario":
@@ -46,11 +46,13 @@ nivel = nivel_data["nivel_atual"]
 
 # ---------- PROMPT ----------
 prompt = f"""
-Você é um gerador de desafios diários de programação em Java Backend e Spring Boot.
+Você é um arquiteto de software especialista em Java Backend e Spring Boot.
 
 Nível do usuário: {nivel}
 
-Gere UM desafio seguindo EXATAMENTE este formato JSON:
+Gere UM desafio diário realista, baseado em problemas de sistemas reais.
+
+Formato de resposta OBRIGATÓRIO (JSON válido):
 
 {{
   "titulo": "string",
@@ -64,12 +66,31 @@ Gere UM desafio seguindo EXATAMENTE este formato JSON:
   ]
 }}
 
+Diretrizes por nível:
+
+INICIANTE:
+- lógica básica
+- console
+- problemas simples com contexto real
+
+INTERMEDIÁRIO:
+- API REST com Spring Boot
+- regras de negócio
+- separação de camadas
+- modelagem de dados
+- objetivos claros de execução
+
+AVANÇADO:
+- decisões arquiteturais
+- design de projeto
+- extensibilidade
+- qualidade de código
+
 Regras:
-- Responda SOMENTE com JSON válido
-- Não use markdown
+- Não inclua código
 - Não explique a solução
-- Não inclua código Java
-- Seja claro, objetivo e compatível com o nível informado
+- Não use markdown
+- Seja objetivo e profissional
 """
 
 # ---------- GROQ CALL ----------
