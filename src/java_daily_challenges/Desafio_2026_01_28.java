@@ -15,6 +15,7 @@ Use boas práticas de orientação a objetos.
 
 public class Desafio_2026_01_28 {
     public static void main(String[] args) {
+
         System.out.println("Inicie sua implementação aqui!");
     }
 }

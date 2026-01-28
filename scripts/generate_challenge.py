@@ -1,63 +1,121 @@
-import os, json, datetime
+import os
+import json
+import datetime
+import requests
 
-folder = "src/java_daily_challenges"
-os.makedirs(folder, exist_ok=True)
+# ================= CONFIG =================
+FOLDER = "src/java_daily_challenges"
+os.makedirs(FOLDER, exist_ok=True)
 
-nivel_file = f"{folder}/nivel.json"
+NIVEL_FILE = f"{FOLDER}/nivel.json"
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+MODEL = "llama3-8b-8192"
+# =========================================
 
-# Se não existir, cria nível inicial
-if not os.path.exists(nivel_file):
+# ---------- NIVEL ----------
+if not os.path.exists(NIVEL_FILE):
     nivel_data = {
         "nivel_atual": "iniciante",
         "ultima_analise": str(datetime.date.today()),
         "exercicios_desde_analise": 0
     }
 else:
-    with open(nivel_file, "r") as f:
+    with open(NIVEL_FILE, "r") as f:
         nivel_data = json.load(f)
 
-# Atualiza contador
 nivel_data["exercicios_desde_analise"] += 1
 
-# Se chegou a 30, reavalia nível
 if nivel_data["exercicios_desde_analise"] >= 30:
-    if nivel_data["nivel_atual"] == "iniciante":
-        nivel_data["nivel_atual"] = "intermediario"
-    elif nivel_data["nivel_atual"] == "intermediario":
-        nivel_data["nivel_atual"] = "avancado"
+    nivel_data["nivel_atual"] = (
+        "intermediario" if nivel_data["nivel_atual"] == "iniciante"
+        else "avancado"
+    )
     nivel_data["exercicios_desde_analise"] = 0
     nivel_data["ultima_analise"] = str(datetime.date.today())
 
-# Salva nível atualizado
-with open(nivel_file, "w") as f:
+with open(NIVEL_FILE, "w") as f:
     json.dump(nivel_data, f, indent=4)
-
-# Gera desafio adaptado ao nível
-today = datetime.datetime.now().strftime("%Y_%m_%d_%H%M")
-filename = f"{folder}/Desafio_{today}.java"
 
 nivel = nivel_data["nivel_atual"]
 
-if nivel == "iniciante":
-    desafio = "Crie um programa que leia números e calcule a média."
-elif nivel == "intermediario":
-    desafio = "Implemente um sistema em Java usando MVC para gerenciar uma lista de tarefas."
-else:  # avançado
-    desafio = "Desenvolva uma API REST em Java (Spring Boot) para gerenciar usuários e autenticação."
+# ---------- PROMPT ----------
+prompt = f"""
+Você é um gerador de desafios diários de programação em Java.
 
-challenge = f"""
+Nível do usuário: {nivel}
+
+Gere UM desafio seguindo EXATAMENTE este formato JSON:
+
+{{
+  "titulo": "...",
+  "enunciado": "...",
+  "requisitos": ["...", "..."],
+  "exemplos": [
+    {{
+      "entrada": "...",
+      "saida": "..."
+    }}
+  ]
+}}
+
+Regras:
+- Não explique a solução
+- Não inclua código Java
+- Use apenas lógica compatível com o nível informado
+- Seja claro e objetivo
+"""
+
+# ---------- GROQ CALL ----------
+response = requests.post(
+    "https://api.groq.com/openai/v1/chat/completions",
+    headers={
+        "Authorization": f"Bearer {GROQ_API_KEY}",
+        "Content-Type": "application/json"
+    },
+    json={
+        "model": MODEL,
+        "messages": [{"role": "user", "content": prompt}],
+        "temperature": 0.7
+    }
+)
+
+content = response.json()["choices"][0]["message"]["content"]
+challenge_data = json.loads(content)
+
+# ---------- JAVA FILE ----------
+today = datetime.datetime.now().strftime("%Y_%m_%d_%H%M")
+classname = f"Desafio_{today}"
+filename = f"{FOLDER}/{classname}.java"
+
+java_file = f"""
+package java_daily_challenges;
+
 /*
-Desafio do dia {today} - Nível: {nivel}
+========================================
+{challenge_data["titulo"]}
+Nível: {nivel}
+Data: {today}
+========================================
 
-{desafio}
+ENUNCIADO:
+{challenge_data["enunciado"]}
+
+REQUISITOS:
+{chr(10).join("- " + r for r in challenge_data["requisitos"])}
+
+EXEMPLOS:
+{chr(10).join(
+    f"Entrada: {e['entrada']} | Saída esperada: {e['saida']}"
+    for e in challenge_data["exemplos"]
+)}
 */
 
-public class Desafio_{today} {{
+public class {classname} {{
     public static void main(String[] args) {{
-        System.out.println("Inicie sua implementação aqui!");
+        // Implemente sua solução aqui
     }}
 }}
 """
 
 with open(filename, "w") as f:
-    f.write(challenge)
+    f.write(java_file)

@@ -21,6 +21,8 @@ jobs:
           python-version: "3.x"
 
       - name: Run script to generate challenge
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
         run: |
           python scripts/generate_challenge.py
 
