@@ -29,7 +29,7 @@ jobs:
           git config --global user.name "daily-bot"
           git config --global user.email "bot@example.com"
           git add src/java_daily_challenges/
-          git commit -m "Add daily Java challenge"
-          git push
+          git diff --cached --quiet && echo "No changes to commit" || git commit -m "Add daily Java challenge"
+          git push https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }} HEAD:${{ github.ref }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

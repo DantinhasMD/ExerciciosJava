@@ -21,12 +21,10 @@ nivel_data["exercicios_desde_analise"] += 1
 
 # Se chegou a 30, reavalia nível
 if nivel_data["exercicios_desde_analise"] >= 30:
-    # Aqui você pode colocar lógica simples ou chamar IA
     if nivel_data["nivel_atual"] == "iniciante":
         nivel_data["nivel_atual"] = "intermediario"
     elif nivel_data["nivel_atual"] == "intermediario":
         nivel_data["nivel_atual"] = "avancado"
-    # Reinicia contador e atualiza data
     nivel_data["exercicios_desde_analise"] = 0
     nivel_data["ultima_analise"] = str(datetime.date.today())
 
@@ -35,7 +33,7 @@ with open(nivel_file, "w") as f:
     json.dump(nivel_data, f, indent=4)
 
 # Gera desafio adaptado ao nível
-today = datetime.date.today().strftime("%Y_%m_%d")
+today = datetime.datetime.now().strftime("%Y_%m_%d_%H%M")
 filename = f"{folder}/Desafio_{today}.java"
 
 nivel = nivel_data["nivel_atual"]
