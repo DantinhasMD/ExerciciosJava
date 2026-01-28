@@ -1,7 +1,7 @@
 import datetime
 
 today = datetime.date.today().strftime("%Y_%m_%d")
-filename = f"src/java_dailys_challenges/Desafio_{today}.java"
+filename = f"src/java_daily_challenges/Desafio_{today}.java"
 
 challenge = f"""
 /*
