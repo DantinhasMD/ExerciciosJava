@@ -9,13 +9,15 @@ os.makedirs(FOLDER, exist_ok=True)
 
 NIVEL_FILE = f"{FOLDER}/nivel.json"
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
-MODEL = "llama3-8b-8192"
+MODEL = os.getenv("GROQ_MODEL", "llama-3.1-8b-instant")
+API_URL = "https://api.groq.com/openai/v1/chat/completions"
 # =========================================
 
-# ---------- NIVEL ----------
+# ---------- VALIDACOES BASICAS ----------
 if not GROQ_API_KEY:
     raise RuntimeError("GROQ_API_KEY não encontrada nas variáveis de ambiente")
 
+# ---------- NIVEL ----------
 if not os.path.exists(NIVEL_FILE):
     nivel_data = {
         "nivel_atual": "iniciante",
@@ -23,54 +25,56 @@ if not os.path.exists(NIVEL_FILE):
         "exercicios_desde_analise": 0
     }
 else:
-    with open(NIVEL_FILE, "r") as f:
+    with open(NIVEL_FILE, "r", encoding="utf-8") as f:
         nivel_data = json.load(f)
 
 nivel_data["exercicios_desde_analise"] += 1
 
 if nivel_data["exercicios_desde_analise"] >= 30:
-    nivel_data["nivel_atual"] = (
-        "intermediario" if nivel_data["nivel_atual"] == "iniciante"
-        else "avancado"
-    )
+    if nivel_data["nivel_atual"] == "iniciante":
+        nivel_data["nivel_atual"] = "intermediario"
+    elif nivel_data["nivel_atual"] == "intermediario":
+        nivel_data["nivel_atual"] = "avancado"
+
     nivel_data["exercicios_desde_analise"] = 0
     nivel_data["ultima_analise"] = str(datetime.date.today())
 
-with open(NIVEL_FILE, "w") as f:
-    json.dump(nivel_data, f, indent=4)
+with open(NIVEL_FILE, "w", encoding="utf-8") as f:
+    json.dump(nivel_data, f, indent=4, ensure_ascii=False)
 
 nivel = nivel_data["nivel_atual"]
 
 # ---------- PROMPT ----------
 prompt = f"""
-Você é um gerador de desafios diários de programação em Java.
+Você é um gerador de desafios diários de programação em Java Backend e Spring Boot.
 
 Nível do usuário: {nivel}
 
 Gere UM desafio seguindo EXATAMENTE este formato JSON:
 
 {{
-  "titulo": "...",
-  "enunciado": "...",
-  "requisitos": ["...", "..."],
+  "titulo": "string",
+  "enunciado": "string",
+  "requisitos": ["string", "string"],
   "exemplos": [
     {{
-      "entrada": "...",
-      "saida": "..."
+      "entrada": "string",
+      "saida": "string"
     }}
   ]
 }}
 
 Regras:
+- Responda SOMENTE com JSON válido
+- Não use markdown
 - Não explique a solução
 - Não inclua código Java
-- Use apenas lógica compatível com o nível informado
-- Seja claro e objetivo
+- Seja claro, objetivo e compatível com o nível informado
 """
 
 # ---------- GROQ CALL ----------
 response = requests.post(
-    "https://api.groq.com/openai/v1/chat/completions",
+    API_URL,
     headers={
         "Authorization": f"Bearer {GROQ_API_KEY}",
         "Content-Type": "application/json"
@@ -78,27 +82,44 @@ response = requests.post(
     json={
         "model": MODEL,
         "messages": [{"role": "user", "content": prompt}],
-        "temperature": 0.7
-    }
+        "temperature": 0.6
+    },
+    timeout=30
 )
 
 data = response.json()
 
+# ---------- TRATAMENTO DE ERRO DA API ----------
 if "choices" not in data:
     raise RuntimeError(
-        f"Erro ao gerar desafio via Groq API: {json.dumps(data, indent=2)}"
+        "Erro ao gerar desafio via Groq API:\n"
+        + json.dumps(data, indent=2, ensure_ascii=False)
     )
 
-content = data["choices"][0]["message"]["content"]
-challenge_data = json.loads(content)
+raw_content = data["choices"][0]["message"]["content"].strip()
+
+# ---------- PARSE SEGURO DO JSON DA IA ----------
+try:
+    challenge_data = json.loads(raw_content)
+except json.JSONDecodeError:
+    raise RuntimeError(
+        "Resposta da IA não é JSON válido:\n" + raw_content
+    )
+
+# ---------- VALIDACAO DE CONTRATO ----------
+required_keys = {"titulo", "enunciado", "requisitos", "exemplos"}
+if not required_keys.issubset(challenge_data):
+    raise RuntimeError(
+        "JSON retornado não segue o contrato esperado:\n"
+        + json.dumps(challenge_data, indent=2, ensure_ascii=False)
+    )
 
 # ---------- JAVA FILE ----------
 today = datetime.datetime.now().strftime("%Y_%m_%d_%H%M")
 classname = f"Desafio_{today}"
 filename = f"{FOLDER}/{classname}.java"
 
-java_file = f"""
-package java_daily_challenges;
+java_file = f"""package java_daily_challenges;
 
 /*
 ========================================
@@ -127,5 +148,5 @@ public class {classname} {{
 }}
 """
 
-with open(filename, "w") as f:
+with open(filename, "w", encoding="utf-8") as f:
     f.write(java_file)
