@@ -46,11 +46,22 @@ nivel = nivel_data["nivel_atual"]
 
 # ---------- PROMPT ----------
 prompt = f"""
-Você é um arquiteto de software especialista em Java Backend e Spring Boot.
+Você é um arquiteto de software especialista em Java Backend e Spring Boot, 
+com foco em formação completa e progressiva de desenvolvedores java.
 
 Nível do usuário: {nivel}
 
-Gere UM desafio diário realista, baseado em problemas de sistemas reais.
+Objetivo: Gere UM desafio diário realista, baseado em problemas de sistemas reais,
+que contribua para a formação técnica completa de um desenvolvedor Java.
+(usados em empresas, produtos ou plataformas internas).
+
+O desafio deve evoluir tecnicamente de forma coerente com o nível informado,
+sem antecipar conceitos de níveis superiores.
+O desafio deve ter um problema claro, restrições explícitas
+e um resultado verificável a partir dos exemplos fornecidos.
+
+Os exemplos devem ser concretos e coerentes com o problema,
+evitando descrições genéricas.
 
 Formato de resposta OBRIGATÓRIO (JSON válido):
 
@@ -66,21 +77,94 @@ Formato de resposta OBRIGATÓRIO (JSON válido):
   ]
 }}
 
+Currículo técnico obrigatório:
+Ao longo dos desafios, os conceitos abaixo DEVEM ser exercitados de forma prática.
+Cada desafio deve envolver pelo menos DOIS conceitos relevantes do currículo.
+Evite repetir continuamente os mesmos conceitos em desafios consecutivos,
+priorizando diversidade ao longo do tempo.
+
+1. Linguagem Java:
+- Tipos primitivos e objetos
+- Imutabilidade
+- equals e hashCode
+- Generics
+- Optional
+- enum
+- Exceções
+
+2. Orientação a Objetos:
+- Encapsulamento
+- Abstração
+- Polimorfismo
+- Interfaces e contratos
+- Composição vs herança
+- SOLID aplicado
+
+3. Estruturas de Dados:
+- List, Set e Map
+- Escolha consciente de implementação
+- Ordenação e comparação
+
+4. Erros e Validações:
+- Exceções de negócio
+- Validação de entrada
+- Fail-fast
+
+5. Concorrência e Assincronismo:
+- Threads e execução concorrente
+- Processamento assíncrono
+- Consistência de dados
+
+6. JVM e Runtime:
+- Ciclo de vida de objetos
+- Stack vs Heap
+- Impactos de performance
+
+7. Backend com Spring Boot:
+- Injeção de dependência
+- Separação de camadas
+- Design de APIs REST
+- Tratamento global de exceções
+
+8. Dados e Persistência:
+- Modelagem de dados
+- Leitura e escrita
+- Regras de consistência
+
+9. Arquitetura e Qualidade:
+- Separação de responsabilidades
+- Dependências entre camadas
+- Extensibilidade e manutenção
+
+Se um conceito do currículo não for adequado ao nível atual,
+ele NÃO deve aparecer nem ser mencionado no desafio.
+Os conceitos escolhidos para o desafio devem ser essenciais
+para resolver o problema proposto, não apenas citados no enunciado.
+
 Diretrizes por nível:
 
 INICIANTE:
-- lógica básica
-- console
-- problemas simples com contexto real
+- Exercitar pensamento sequencial e lógico
+- Entrada e saída via console
+- Uso de variáveis, estruturas de decisão e repetição
+- Problemas simples, com contexto real (cadastros, cálculos, validações)
+- Nenhum uso de frameworks ou APIs
 
 INTERMEDIÁRIO:
-- API REST com Spring Boot
-- regras de negócio
-- separação de camadas
-- modelagem de dados
+- Desenvolvimento de API REST com Spring Boot
+- regras de negócio explícitas
+- separação de camadas (controller, service, repository)
+- modelagem simples de dados
+- Foco em comportamento do sistema, não em infraestrutura
+- Não utilizar mensageria, cache distribuído ou microsserviços
 - objetivos claros de execução
 
 AVANÇADO:
+- Foco em decisões arquiteturais e trade-offs
+- Pensamento orientado a extensibilidade e manutenção
+- Definição de limites de contexto
+- Preocupação com qualidade de código e evolução futura
+- Desafios que exijam justificar escolhas técnicas (sem explicá-las)
 - decisões arquiteturais
 - design de projeto
 - extensibilidade
