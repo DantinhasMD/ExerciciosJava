@@ -2,6 +2,7 @@ import os
 import json
 import datetime
 import requests
+import re
 
 # ================= CONFIG =================
 FOLDER = "src/java_daily_challenges"
@@ -44,31 +45,36 @@ with open(NIVEL_FILE, "w", encoding="utf-8") as f:
 
 nivel = nivel_data["nivel_atual"]
 
-# ---------- PROMPT ----------
+# ---------- PROMPT (COMPLETO, SEM CORTES) ----------
 prompt = f"""
-Você é um arquiteto de software especialista em Java Backend e Spring Boot, 
-com foco em formação completa e progressiva de desenvolvedores java.
+Você é um arquiteto de software especialista em Java Backend e Spring Boot,
+com foco em formação completa e progressiva de desenvolvedores Java.
+
+IMPORTANTE:
+Sua resposta DEVE ser APENAS um JSON válido.
+Não inclua textos antes ou depois.
+Não use markdown.
+Não use listas fora do JSON.
+Não explique nada.
+Não inclua comentários.
 
 Nível do usuário: {nivel}
 
-Objetivo: Gere UM desafio diário realista, baseado em problemas de sistemas reais,
-que contribua para a formação técnica completa de um desenvolvedor Java.
-(usados em empresas, produtos ou plataformas internas).
+Objetivo:
+Gere UM desafio diário realista, baseado em problemas de sistemas reais,
+usados em empresas, produtos ou plataformas internas.
 
 O desafio deve evoluir tecnicamente de forma coerente com o nível informado,
 sem antecipar conceitos de níveis superiores.
-O desafio deve ter um problema claro, restrições explícitas
-e um resultado verificável a partir dos exemplos fornecidos.
-
-Os exemplos devem ser concretos e coerentes com o problema,
-evitando descrições genéricas.
+O problema deve ter regras claras, restrições explícitas
+e um resultado verificável por meio dos exemplos.
 
 Formato de resposta OBRIGATÓRIO (JSON válido):
 
 {{
   "titulo": "string",
   "enunciado": "string",
-  "requisitos": ["string", "string"],
+  "requisitos": ["string"],
   "exemplos": [
     {{
       "entrada": "string",
@@ -79,7 +85,7 @@ Formato de resposta OBRIGATÓRIO (JSON válido):
 
 Currículo técnico obrigatório:
 Ao longo dos desafios, os conceitos abaixo DEVEM ser exercitados de forma prática.
-Cada desafio deve envolver pelo menos DOIS conceitos relevantes do currículo.
+Cada desafio deve envolver pelo menos DOIS conceitos relevantes.
 Evite repetir continuamente os mesmos conceitos em desafios consecutivos,
 priorizando diversidade ao longo do tempo.
 
@@ -138,8 +144,6 @@ priorizando diversidade ao longo do tempo.
 
 Se um conceito do currículo não for adequado ao nível atual,
 ele NÃO deve aparecer nem ser mencionado no desafio.
-Os conceitos escolhidos para o desafio devem ser essenciais
-para resolver o problema proposto, não apenas citados no enunciado.
 
 Diretrizes por nível:
 
@@ -147,34 +151,28 @@ INICIANTE:
 - Exercitar pensamento sequencial e lógico
 - Entrada e saída via console
 - Uso de variáveis, estruturas de decisão e repetição
-- Problemas simples, com contexto real (cadastros, cálculos, validações)
+- Problemas simples com contexto real
 - Nenhum uso de frameworks ou APIs
 
 INTERMEDIÁRIO:
-- Desenvolvimento de API REST com Spring Boot
-- regras de negócio explícitas
-- separação de camadas (controller, service, repository)
-- modelagem simples de dados
-- Foco em comportamento do sistema, não em infraestrutura
-- Não utilizar mensageria, cache distribuído ou microsserviços
-- objetivos claros de execução
+- API REST com Spring Boot
+- Regras de negócio explícitas
+- Separação de camadas
+- Modelagem simples de dados
+- Objetivos claros de execução
+- Foco em comportamento do sistema
 
 AVANÇADO:
-- Foco em decisões arquiteturais e trade-offs
-- Pensamento orientado a extensibilidade e manutenção
-- Definição de limites de contexto
-- Preocupação com qualidade de código e evolução futura
-- Desafios que exijam justificar escolhas técnicas (sem explicá-las)
-- decisões arquiteturais
-- design de projeto
-- extensibilidade
-- qualidade de código
+- Decisões arquiteturais e trade-offs
+- Pensamento orientado a extensibilidade
+- Qualidade de código e evolução futura
+- Dependências entre camadas
+- Design de projeto
 
-Regras:
+Regras finais:
 - Não inclua código
 - Não explique a solução
-- Não use markdown
-- Seja objetivo e profissional
+- Responda SOMENTE com JSON válido
 """
 
 # ---------- GROQ CALL ----------
@@ -194,24 +192,30 @@ response = requests.post(
 
 data = response.json()
 
-# ---------- TRATAMENTO DE ERRO DA API ----------
 if "choices" not in data:
     raise RuntimeError(
         "Erro ao gerar desafio via Groq API:\n"
         + json.dumps(data, indent=2, ensure_ascii=False)
     )
 
-raw_content = data["choices"][0]["message"]["content"].strip()
+raw_content = data["choices"][0]["message"]["content"]
 
-# ---------- PARSE SEGURO DO JSON DA IA ----------
-try:
-    challenge_data = json.loads(raw_content)
-except json.JSONDecodeError:
-    raise RuntimeError(
-        "Resposta da IA não é JSON válido:\n" + raw_content
-    )
+# ---------- EXTRAÇÃO SEGURA DO JSON ----------
+def extract_json(text: str) -> dict:
+    match = re.search(r"\{.*\}", text, re.DOTALL)
+    if not match:
+        raise RuntimeError("Nenhum JSON encontrado na resposta da IA")
 
-# ---------- VALIDACAO DE CONTRATO ----------
+    try:
+        return json.loads(match.group())
+    except json.JSONDecodeError as e:
+        raise RuntimeError(
+            "JSON inválido retornado pela IA:\n" + match.group()
+        ) from e
+
+challenge_data = extract_json(raw_content)
+
+# ---------- VALIDAÇÃO DE CONTRATO ----------
 required_keys = {"titulo", "enunciado", "requisitos", "exemplos"}
 if not required_keys.issubset(challenge_data):
     raise RuntimeError(
@@ -255,3 +259,5 @@ public class {classname} {{
 
 with open(filename, "w", encoding="utf-8") as f:
     f.write(java_file)
+
+print(f"Desafio gerado com sucesso: {filename}")
