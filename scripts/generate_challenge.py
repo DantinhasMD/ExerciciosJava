@@ -50,30 +50,28 @@ prompt = f"""
 Você é um arquiteto de software especialista em Java Backend e Spring Boot,
 com foco em formação completa e progressiva de desenvolvedores Java.
 
-IMPORTANTE:
-Sua resposta DEVE ser APENAS um JSON válido.
-Não inclua textos antes ou depois.
-Não use markdown.
-Não use listas fora do JSON.
-Não explique nada.
-Não inclua comentários.
-
 Nível do usuário: {nivel}
 
-Objetivo:
 Gere UM desafio diário realista, baseado em problemas de sistemas reais,
 usados em empresas, produtos ou plataformas internas.
 
-O desafio deve evoluir tecnicamente de forma coerente com o nível informado,
-sem antecipar conceitos de níveis superiores.
-O problema deve ter regras claras, restrições explícitas
-e um resultado verificável por meio dos exemplos.
+O desafio deve:
+- Ter regras de negócio claras e verificáveis
+- Exigir decisões técnicas implícitas (estrutura de dados, validação, regras)
+- Ter comportamento determinístico (resultado certo ou errado)
+- Evoluir conforme o nível informado, sem antecipar conceitos
+- Responda EXCLUSIVAMENTE com um JSON válido.
+- Não inclua texto fora do JSON.
+- Não use markdown.
+- Não explique a solução.
 
 Formato de resposta OBRIGATÓRIO (JSON válido):
 
 {{
   "titulo": "string",
   "enunciado": "string",
+  "conceitos": ["string"],
+  "foco_tecnico": ["string"],
   "requisitos": ["string"],
   "exemplos": [
     {{
@@ -83,11 +81,19 @@ Formato de resposta OBRIGATÓRIO (JSON válido):
   ]
 }}
 
+Regras obrigatórias:
+
+- "foco_tecnico" deve listar os conceitos do currículo exercitados neste desafio
+  e indicar brevemente COMO o problema força seu uso
+  (ex: "List: armazenamento e iteração", "Exceções: validação de entrada").
+- Cada desafio deve exercitar pelo menos DOIS conceitos relevantes.
+- Os requisitos devem impor restrições reais, não descrições genéricas.
+- Os exemplos devem permitir validar se a solução está correta ou incorreta.
+- Pelo menos UM exemplo deve representar um caso inválido ou erro.
+
 Currículo técnico obrigatório:
-Ao longo dos desafios, os conceitos abaixo DEVEM ser exercitados de forma prática.
-Cada desafio deve envolver pelo menos DOIS conceitos relevantes.
-Evite repetir continuamente os mesmos conceitos em desafios consecutivos,
-priorizando diversidade ao longo do tempo.
+Os conceitos abaixo DEVEM ser exercitados de forma prática no exercício prático.
+Cada desafio deve envolver pelo menos DOIS conceitos relevantes:
 
 1. Linguagem Java:
 - Tipos primitivos e objetos
@@ -168,11 +174,6 @@ AVANÇADO:
 - Qualidade de código e evolução futura
 - Dependências entre camadas
 - Design de projeto
-
-Regras finais:
-- Não inclua código
-- Não explique a solução
-- Responda SOMENTE com JSON válido
 """
 
 # ---------- GROQ CALL ----------
