@@ -1,4 +1,4 @@
-package java_daily_challenges;
+package java_daily_challenges.iniciante;
 
 import java.util.ArrayList;
 import java.util.List;
