@@ -18,32 +18,81 @@ API_URL = "https://api.groq.com/openai/v1/chat/completions"
 if not GROQ_API_KEY:
     raise RuntimeError("GROQ_API_KEY não encontrada nas variáveis de ambiente")
 
+# ================= CONCEITOS POR NÍVEL =================
+CONCEITOS_POR_NIVEL = {
+    "iniciante": [
+        "variaveis",
+        "condicionais",
+        "loops",
+        "entrada_saida_console",
+        "listas",
+        "mapas",
+        "excecoes"
+    ],
+    "intermediario": [
+        "api_rest",
+        "spring_boot",
+        "separacao_camadas",
+        "regras_negocio",
+        "modelagem_dados",
+        "tratamento_excecoes",
+        "validacao_entrada"
+    ],
+    "avancado": [
+        "arquitetura",
+        "trade_offs",
+        "extensibilidade",
+        "qualidade_codigo",
+        "design_projeto",
+        "dependencias_camadas",
+        "performance"
+    ]
+}
+
 # ---------- NIVEL ----------
 if not os.path.exists(NIVEL_FILE):
     nivel_data = {
         "nivel_atual": "iniciante",
         "ultima_analise": str(datetime.date.today()),
-        "exercicios_desde_analise": 0
+        "exercicios_desde_analise": 0,
+        "conceitos_contador": {}
     }
 else:
     with open(NIVEL_FILE, "r", encoding="utf-8") as f:
         nivel_data = json.load(f)
 
+nivel = nivel_data["nivel_atual"]
 nivel_data["exercicios_desde_analise"] += 1
 
 if nivel_data["exercicios_desde_analise"] >= 90:
-    if nivel_data["nivel_atual"] == "iniciante":
-        nivel_data["nivel_atual"] = "intermediario"
-    elif nivel_data["nivel_atual"] == "intermediario":
-        nivel_data["nivel_atual"] = "avancado"
+    if nivel == "iniciante":
+        nivel = "intermediario"
+    elif nivel == "intermediario":
+        nivel = "avancado"
 
+    nivel_data["nivel_atual"] = nivel
     nivel_data["exercicios_desde_analise"] = 0
     nivel_data["ultima_analise"] = str(datetime.date.today())
 
-with open(NIVEL_FILE, "w", encoding="utf-8") as f:
-    json.dump(nivel_data, f, indent=4, ensure_ascii=False)
-
 nivel = nivel_data["nivel_atual"]
+
+# ================= INICIALIZA CONCEITOS =================
+conceitos_ativos = CONCEITOS_POR_NIVEL[nivel]
+
+for conceito in conceitos_ativos:
+    nivel_data["conceitos_contador"].setdefault(conceito, 0)
+
+# ================= ESCOLHA BALANCEADA =================
+def escolher_conceitos(conceitos_contador, conceitos_validos, quantidade=2):
+    filtrados = {c: conceitos_contador[c] for c in conceitos_validos}
+    ordenados = sorted(filtrados.items(), key=lambda x: x[1])
+    return [c[0] for c in ordenados[:quantidade]]
+
+conceitos_escolhidos = escolher_conceitos(
+    nivel_data["conceitos_contador"],
+    conceitos_ativos,
+    quantidade=2
+)
 
 # ---------- PROMPT (COMPLETO, SEM CORTES) ----------
 prompt = f"""
@@ -55,6 +104,9 @@ Nível do usuário: {nivel}
 Gere UM desafio diário realista, baseado em problemas de sistemas reais,
 usados em empresas, produtos ou plataformas internas.
 
+CONCEITOS OBRIGATÓRIOS PARA ESTE DESAFIO:
+{", ".join(conceitos_escolhidos)}
+
 O desafio deve:
 - Ter regras de negócio claras e verificáveis
 - Exigir decisões técnicas implícitas (estrutura de dados, validação, regras)
@@ -65,94 +117,7 @@ O desafio deve:
 - Não use markdown.
 - Não explique a solução.
 
-Formato de resposta OBRIGATÓRIO (JSON válido):
-
-{{
-  "titulo": "string",
-  "enunciado": "string",
-  "conceitos": ["string"],
-  "foco_tecnico": ["string"],
-  "requisitos": ["string"],
-  "exemplos": [
-    {{
-      "entrada": "string",
-      "saida": "string"
-    }}
-  ]
-}}
-
-Regras obrigatórias:
-
-- "foco_tecnico" deve listar os conceitos do currículo exercitados neste desafio
-  e indicar brevemente COMO o problema força seu uso
-  (ex: "List: armazenamento e iteração", "Exceções: validação de entrada").
-- Cada desafio deve exercitar pelo menos DOIS conceitos relevantes.
-- Os requisitos devem impor restrições reais, não descrições genéricas.
-- Os exemplos devem permitir validar se a solução está correta ou incorreta.
-- Pelo menos UM exemplo deve representar um caso inválido ou erro.
-
-Currículo técnico obrigatório:
-Os conceitos abaixo DEVEM ser exercitados de forma prática no exercício prático.
-Cada desafio deve envolver pelo menos DOIS conceitos relevantes:
-
-1. Linguagem Java:
-- Tipos primitivos e objetos
-- Imutabilidade
-- equals e hashCode
-- Generics
-- Optional
-- enum
-- Exceções
-
-2. Orientação a Objetos:
-- Encapsulamento
-- Abstração
-- Polimorfismo
-- Interfaces e contratos
-- Composição vs herança
-- SOLID aplicado
-
-3. Estruturas de Dados:
-- List, Set e Map
-- Escolha consciente de implementação
-- Ordenação e comparação
-
-4. Erros e Validações:
-- Exceções de negócio
-- Validação de entrada
-- Fail-fast
-
-5. Concorrência e Assincronismo:
-- Threads e execução concorrente
-- Processamento assíncrono
-- Consistência de dados
-
-6. JVM e Runtime:
-- Ciclo de vida de objetos
-- Stack vs Heap
-- Impactos de performance
-
-7. Backend com Spring Boot:
-- Injeção de dependência
-- Separação de camadas
-- Design de APIs REST
-- Tratamento global de exceções
-
-8. Dados e Persistência:
-- Modelagem de dados
-- Leitura e escrita
-- Regras de consistência
-
-9. Arquitetura e Qualidade:
-- Separação de responsabilidades
-- Dependências entre camadas
-- Extensibilidade e manutenção
-
-Se um conceito do currículo não for adequado ao nível atual,
-ele NÃO deve aparecer nem ser mencionado no desafio.
-
 Diretrizes por nível:
-
 INICIANTE:
 - Exercitar pensamento sequencial e lógico
 - Entrada e saída via console
@@ -174,6 +139,28 @@ AVANÇADO:
 - Qualidade de código e evolução futura
 - Dependências entre camadas
 - Design de projeto
+
+Formato de resposta OBRIGATÓRIO (JSON válido):
+
+{
+"titulo": "string",
+  "enunciado": "string",
+  "conceitos": ["string"],
+  "foco_tecnico": ["string"],
+  "requisitos": ["string"],
+  "exemplos": [
+    {
+"entrada": "string",
+      "saida": "string"
+    }
+  ]
+}
+
+Regras obrigatórias:
+- "foco_tecnico" deve listar os conceitos do currículo exercitados neste desafio
+  e indicar brevemente COMO o problema força seu uso.
+- Cada desafio deve exercitar pelo menos DOIS conceitos relevantes.
+- Pelo menos UM exemplo deve representar um caso inválido ou erro.
 """
 
 # ---------- GROQ CALL ----------
@@ -194,35 +181,29 @@ response = requests.post(
 data = response.json()
 
 if "choices" not in data:
-    raise RuntimeError(
-        "Erro ao gerar desafio via Groq API:\n"
-        + json.dumps(data, indent=2, ensure_ascii=False)
-    )
+    raise RuntimeError(json.dumps(data, indent=2, ensure_ascii=False))
 
 raw_content = data["choices"][0]["message"]["content"]
 
-# ---------- EXTRAÇÃO SEGURA DO JSON ----------
+# ---------- EXTRAÇÃO JSON ----------
 def extract_json(text: str) -> dict:
     match = re.search(r"\{.*\}", text, re.DOTALL)
     if not match:
-        raise RuntimeError("Nenhum JSON encontrado na resposta da IA")
-
-    try:
-        return json.loads(match.group())
-    except json.JSONDecodeError as e:
-        raise RuntimeError(
-            "JSON inválido retornado pela IA:\n" + match.group()
-        ) from e
+        raise RuntimeError("Nenhum JSON encontrado")
+    return json.loads(match.group())
 
 challenge_data = extract_json(raw_content)
 
-# ---------- VALIDAÇÃO DE CONTRATO ----------
-required_keys = {"titulo", "enunciado", "requisitos", "exemplos"}
-if not required_keys.issubset(challenge_data):
-    raise RuntimeError(
-        "JSON retornado não segue o contrato esperado:\n"
-        + json.dumps(challenge_data, indent=2, ensure_ascii=False)
-    )
+# ---------- ATUALIZA CONTADOR (UMA VEZ, COMPROVADO) ----------
+conceitos_gerados = set(challenge_data.get("conceitos", []))
+
+for conceito in conceitos_escolhidos:
+    if conceito in conceitos_gerados:
+        nivel_data["conceitos_contador"][conceito] += 1
+
+# ---------- PERSISTE ESTADO ----------
+with open(NIVEL_FILE, "w", encoding="utf-8") as f:
+    json.dump(nivel_data, f, indent=4, ensure_ascii=False)
 
 # ---------- JAVA FILE ----------
 today = datetime.datetime.now().strftime("%Y_%m_%d_%H%M")
@@ -240,6 +221,9 @@ Data: {today}
 
 ENUNCIADO:
 {challenge_data["enunciado"]}
+
+CONCEITOS:
+{chr(10).join("- " + c for c in challenge_data["conceitos"])}
 
 REQUISITOS:
 {chr(10).join("- " + r for r in challenge_data["requisitos"])}
