@@ -61,6 +61,10 @@ else:
     with open(NIVEL_FILE, "r", encoding="utf-8") as f:
         nivel_data = json.load(f)
 
+# ===== NORMALIZA ESTADO LEGADO (CORREÇÃO DO BUG) =====
+if "conceitos_contador" not in nivel_data or not isinstance(nivel_data["conceitos_contador"], dict):
+    nivel_data["conceitos_contador"] = {}
+
 nivel = nivel_data["nivel_atual"]
 nivel_data["exercicios_desde_analise"] += 1
 
@@ -194,7 +198,7 @@ def extract_json(text: str) -> dict:
 
 challenge_data = extract_json(raw_content)
 
-# ---------- ATUALIZA CONTADOR (UMA VEZ, COMPROVADO) ----------
+# ---------- ATUALIZA CONTADOR (UMA VEZ) ----------
 conceitos_gerados = set(challenge_data.get("conceitos", []))
 
 for conceito in conceitos_escolhidos:
