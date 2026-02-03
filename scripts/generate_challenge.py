@@ -61,9 +61,8 @@ else:
     with open(NIVEL_FILE, "r", encoding="utf-8") as f:
         nivel_data = json.load(f)
 
-# ===== NORMALIZA ESTADO LEGADO (CORREÇÃO DO BUG) =====
-if "conceitos_contador" not in nivel_data or not isinstance(nivel_data["conceitos_contador"], dict):
-    nivel_data["conceitos_contador"] = {}
+# GARANTIA DEFENSIVA (IMPORTANTE)
+nivel_data.setdefault("conceitos_contador", {})
 
 nivel = nivel_data["nivel_atual"]
 nivel_data["exercicios_desde_analise"] += 1
@@ -98,73 +97,35 @@ conceitos_escolhidos = escolher_conceitos(
     quantidade=2
 )
 
-# ---------- PROMPT (COMPLETO, SEM CORTES) ----------
+# ---------- PROMPT (COM CHAVES ESCAPADAS) ----------
 prompt = f"""
 Você é um arquiteto de software especialista em Java Backend e Spring Boot,
 com foco em formação completa e progressiva de desenvolvedores Java.
 
 Nível do usuário: {nivel}
 
-Gere UM desafio diário realista, baseado em problemas de sistemas reais,
-usados em empresas, produtos ou plataformas internas.
+Gere UM desafio diário realista, baseado em problemas de sistemas reais.
 
-CONCEITOS OBRIGATÓRIOS PARA ESTE DESAFIO:
+CONCEITOS OBRIGATÓRIOS:
 {", ".join(conceitos_escolhidos)}
 
-O desafio deve:
-- Ter regras de negócio claras e verificáveis
-- Exigir decisões técnicas implícitas (estrutura de dados, validação, regras)
-- Ter comportamento determinístico (resultado certo ou errado)
-- Evoluir conforme o nível informado, sem antecipar conceitos
-- Responda EXCLUSIVAMENTE com um JSON válido.
-- Não inclua texto fora do JSON.
-- Não use markdown.
-- Não explique a solução.
+Responda EXCLUSIVAMENTE com um JSON válido.
 
-Diretrizes por nível:
-INICIANTE:
-- Exercitar pensamento sequencial e lógico
-- Entrada e saída via console
-- Uso de variáveis, estruturas de decisão e repetição
-- Problemas simples com contexto real
-- Nenhum uso de frameworks ou APIs
+Formato obrigatório:
 
-INTERMEDIÁRIO:
-- API REST com Spring Boot
-- Regras de negócio explícitas
-- Separação de camadas
-- Modelagem simples de dados
-- Objetivos claros de execução
-- Foco em comportamento do sistema
-
-AVANÇADO:
-- Decisões arquiteturais e trade-offs
-- Pensamento orientado a extensibilidade
-- Qualidade de código e evolução futura
-- Dependências entre camadas
-- Design de projeto
-
-Formato de resposta OBRIGATÓRIO (JSON válido):
-
-{
-"titulo": "string",
+{{
+  "titulo": "string",
   "enunciado": "string",
   "conceitos": ["string"],
   "foco_tecnico": ["string"],
   "requisitos": ["string"],
   "exemplos": [
-    {
-"entrada": "string",
+    {{
+      "entrada": "string",
       "saida": "string"
-    }
+    }}
   ]
-}
-
-Regras obrigatórias:
-- "foco_tecnico" deve listar os conceitos do currículo exercitados neste desafio
-  e indicar brevemente COMO o problema força seu uso.
-- Cada desafio deve exercitar pelo menos DOIS conceitos relevantes.
-- Pelo menos UM exemplo deve representar um caso inválido ou erro.
+}}
 """
 
 # ---------- GROQ CALL ----------
@@ -198,7 +159,7 @@ def extract_json(text: str) -> dict:
 
 challenge_data = extract_json(raw_content)
 
-# ---------- ATUALIZA CONTADOR (UMA VEZ) ----------
+# ---------- ATUALIZA CONTADOR ----------
 conceitos_gerados = set(challenge_data.get("conceitos", []))
 
 for conceito in conceitos_escolhidos:
@@ -225,18 +186,6 @@ Data: {today}
 
 ENUNCIADO:
 {challenge_data["enunciado"]}
-
-CONCEITOS:
-{chr(10).join("- " + c for c in challenge_data["conceitos"])}
-
-REQUISITOS:
-{chr(10).join("- " + r for r in challenge_data["requisitos"])}
-
-EXEMPLOS:
-{chr(10).join(
-    f"Entrada: {e['entrada']} | Saída esperada: {e['saida']}"
-    for e in challenge_data["exemplos"]
-)}
 */
 
 public class {classname} {{
