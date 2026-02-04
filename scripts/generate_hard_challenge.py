@@ -3,7 +3,6 @@ import json
 import datetime
 import requests
 import re
-import sys
 
 # ================= CONFIG =================
 FOLDER = "src/hard_challenges"
@@ -31,22 +30,38 @@ HARD_CONCEITOS = [
     "threads"
 ]
 
-# ================= ESTADO =================
-today = datetime.date.today()
+# ================= ESTADO DEFAULT =================
+DEFAULT_STATE = {
+    "total_exercicios": 0,
+    "ultimo_exercicio": None,
+    "conceitos_contador": {c: 0 for c in HARD_CONCEITOS}
+}
 
-if not os.path.exists(STATE_FILE):
-    raise RuntimeError("Arquivo hard_state.json não encontrado")
+# ================= LOAD STATE (SEGURO) =================
+def load_state(path: str, default: dict) -> dict:
+    if not os.path.exists(path):
+        return default.copy()
 
-with open(STATE_FILE, "r", encoding="utf-8") as f:
-    state = json.load(f)
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            content = f.read().strip()
+            if not content:
+                return default.copy()
+            data = json.loads(content)
+    except json.JSONDecodeError:
+        return default.copy()
 
-# Garante compatibilidade futura
-state.setdefault("total_exercicios", 0)
-state.setdefault("ultimo_exercicio", None)
-state.setdefault("conceitos_contador", {})
+    # migração defensiva
+    data.setdefault("total_exercicios", 0)
+    data.setdefault("ultimo_exercicio", None)
+    data.setdefault("conceitos_contador", {})
 
-for conceito in HARD_CONCEITOS:
-    state["conceitos_contador"].setdefault(conceito, 0)
+    for c in HARD_CONCEITOS:
+        data["conceitos_contador"].setdefault(c, 0)
+
+    return data
+
+state = load_state(STATE_FILE, DEFAULT_STATE)
 
 # ================= ESCOLHA BALANCEADA =================
 def escolher_conceitos(contador, qtd=2):
@@ -122,7 +137,7 @@ if "choices" not in data:
 raw = data["choices"][0]["message"]["content"]
 
 # ================= EXTRAÇÃO JSON =================
-def extract_json(text):
+def extract_json(text: str) -> dict:
     match = re.search(r"\{.*\}", text, re.DOTALL)
     if not match:
         raise RuntimeError("JSON não encontrado")
@@ -131,25 +146,17 @@ def extract_json(text):
 challenge = extract_json(raw)
 
 # ================= VALIDAÇÃO HARD =================
-obrigatorios = [
-    "titulo", "enunciado", "conceitos",
-    "foco_tecnico", "requisitos", "exemplos"
-]
-
-for campo in obrigatorios:
-    if campo not in challenge:
-        raise RuntimeError(f"Campo ausente: {campo}")
-
-if len(challenge["requisitos"]) < 7:
+if len(challenge.get("requisitos", [])) < 7:
     raise RuntimeError("Desafio HARD exige no mínimo 7 requisitos")
 
 if not any(
         "erro" in e["saida"].lower() or "inválid" in e["saida"].lower()
-        for e in challenge["exemplos"]
+        for e in challenge.get("exemplos", [])
 ):
-    raise RuntimeError("Nenhum exemplo de erro encontrado")
+    raise RuntimeError("Nenhum exemplo inválido encontrado")
 
 # ================= ATUALIZA ESTADO =================
+today = datetime.date.today()
 state["total_exercicios"] += 1
 state["ultimo_exercicio"] = today.isoformat()
 
@@ -202,4 +209,4 @@ public class {classname} {{
 with open(filename, "w", encoding="utf-8") as f:
     f.write(java_file)
 
-print(f" Desafio HARD gerado com sucesso: {filename}")
+print(f"Desafio HARD gerado com sucesso: {filename}")
