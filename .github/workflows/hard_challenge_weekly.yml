@@ -1,0 +1,34 @@
+name: Gerar Hard Challenge Semanal
+
+on:
+  schedule:
+    - cron: "0 9 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate-hard-challenge:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Rodar gerador de desafio hard
+        run: |
+          python hard_challenges/generate_hard_challenge.py
+
+      - name: Commit do desafio gerado
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add hard_challenges/
+          git commit -m "chore: desafio hard semanal"
+          git push
