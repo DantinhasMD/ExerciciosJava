@@ -104,14 +104,47 @@ com foco em formação completa e progressiva de desenvolvedores Java.
 
 Nível do usuário: {nivel}
 
-Gere UM desafio diário realista, baseado em problemas de sistemas reais.
+Gere UM desafio diário realista, baseado em problemas de sistemas reais,
+usados em empresas, produtos ou plataformas internas.
 
-CONCEITOS OBRIGATÓRIOS:
+CONCEITOS OBRIGATÓRIOS PARA ESTE DESAFIO:
 {", ".join(conceitos_escolhidos)}
 
-Responda EXCLUSIVAMENTE com um JSON válido.
+O desafio deve:
+- Ter regras de negócio claras e verificáveis
+- Exigir decisões técnicas implícitas (estrutura de dados, validação, regras)
+- Ter comportamento determinístico (resultado certo ou errado)
+- Evoluir conforme o nível informado, sem antecipar conceitos
+- Responda EXCLUSIVAMENTE com um JSON válido
+- Não inclua texto fora do JSON
+- Não use markdown
+- Não explique a solução
 
-Formato obrigatório:
+Diretrizes por nível:
+
+INICIANTE:
+- Exercitar pensamento sequencial e lógico
+- Entrada e saída via console
+- Uso de variáveis, estruturas de decisão e repetição
+- Problemas simples com contexto real
+- Nenhum uso de frameworks ou APIs
+
+INTERMEDIÁRIO:
+- API REST com Spring Boot
+- Regras de negócio explícitas
+- Separação de camadas
+- Modelagem simples de dados
+- Objetivos claros de execução
+- Foco em comportamento do sistema
+
+AVANÇADO:
+- Decisões arquiteturais e trade-offs
+- Pensamento orientado a extensibilidade
+- Qualidade de código e evolução futura
+- Dependências entre camadas
+- Design de projeto
+
+Formato de resposta OBRIGATÓRIO (JSON válido):
 
 {{
   "titulo": "string",
@@ -126,7 +159,14 @@ Formato obrigatório:
     }}
   ]
 }}
+
+Regras obrigatórias:
+- "foco_tecnico" deve listar os conceitos do currículo exercitados neste desafio
+  e indicar brevemente COMO o problema força seu uso
+- Cada desafio deve exercitar pelo menos DOIS conceitos relevantes
+- Pelo menos UM exemplo deve representar um caso inválido ou erro
 """
+
 
 # ---------- GROQ CALL ----------
 response = requests.post(
