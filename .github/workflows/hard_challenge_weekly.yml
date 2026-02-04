@@ -21,6 +21,10 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Instalar dependências
+        run: |
+          pip install requests
+
       - name: Rodar gerador de desafio hard
         run: |
           python scripts/generate_hard_challenge.py
