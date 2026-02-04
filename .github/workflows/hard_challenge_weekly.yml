@@ -23,7 +23,7 @@ jobs:
 
       - name: Rodar gerador de desafio hard
         run: |
-          python hard_challenges/generate_hard_challenge.py
+          python scripts/generate_hard_challenge.py
 
       - name: Commit do desafio gerado
         run: |
