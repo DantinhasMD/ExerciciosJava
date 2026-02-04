@@ -26,6 +26,8 @@ jobs:
           pip install requests
 
       - name: Rodar gerador de desafio hard
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
         run: |
           python scripts/generate_hard_challenge.py
 
