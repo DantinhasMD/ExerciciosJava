@@ -3,11 +3,11 @@
     "ultima_analise": "2026-01-28",
     "exercicios_desde_analise": 9,
     "conceitos_contador": {
-        "variaveis": 0,
-        "condicionais": 1,
-        "loops": 1,
-        "entrada_saida_console": 1,
-        "listas": 1,
+        "variaveis": 9,
+        "condicionais": 9,
+        "loops": 9,
+        "entrada_saida_console": 9,
+        "listas": 9,
         "mapas": 0,
         "excecoes": 0
     }

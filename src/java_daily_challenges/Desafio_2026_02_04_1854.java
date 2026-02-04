@@ -8,7 +8,8 @@ Data: 2026_02_04_1854
 ========================================
 
 ENUNCIADO:
-Desenvolva um sistema que permita cadastrar, editar e excluir alunos. O sistema deve armazenar a idade do aluno e a nota na última prova.
+Desenvolva um sistema que permita cadastrar, editar e excluir alunos. O sistema deve armazenar a idade do aluno e a
+nota na última prova.
 
 CONCEITOS:
 - variáveis
