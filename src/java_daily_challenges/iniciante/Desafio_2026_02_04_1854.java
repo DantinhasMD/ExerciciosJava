@@ -1,4 +1,4 @@
-package java_daily_challenges;
+package java_daily_challenges.iniciante;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +33,7 @@ Entrada: inserir aluno: João, nota: 15 | Saída esperada: Nota inválida
 Entrada: editar aluno: João, idade: 20, nota: 9 | Saída esperada: {"nome":"João","idade":20,"nota":9}
 Entrada: excluir aluno: João | Saída esperada: Aluno excluído com sucesso
 */
-class Aluno{
+class Alun{
     private String nome;
     private int idade;
     private double notaUltimaProva;
@@ -58,7 +58,7 @@ class Aluno{
         this.notaUltimaProva = notaUltimaProva;
     }
 
-    public Aluno(String nome, int idade, double notaUltimaProva){
+    public Alun(String nome, int idade, double notaUltimaProva){
         this.nome = nome;
         this.idade = idade;
         this.notaUltimaProva = notaUltimaProva;
@@ -66,7 +66,7 @@ class Aluno{
 }
 
 class Escola{
-    List<Aluno> alunos = new ArrayList<>();
+    List<Alun> alunos = new ArrayList<>();
 
     public void adicionar(String nome, int idade, double nota){
         if (nota > 10) {
@@ -84,12 +84,12 @@ class Escola{
             return;
         }
 
-        alunos.add(new Aluno(nome, idade, nota));
+        alunos.add(new Alun(nome, idade, nota));
         System.out.println("\nAluno cadastrado com sucesso");
     }
 
-    private Aluno buscarAluno(String nome) {
-        for (Aluno a : alunos) {
+    private Alun buscarAluno(String nome) {
+        for (Alun a : alunos) {
             if (a.getNome().equalsIgnoreCase(nome)) {
                 return a;
             }
@@ -98,7 +98,7 @@ class Escola{
     }
 
     public void buscar(String nome) {
-        Aluno aluno = buscarAluno(nome);
+        Alun aluno = buscarAluno(nome);
 
         if (aluno == null) {
             System.out.println("\nAluno não encontrado");
@@ -114,7 +114,7 @@ class Escola{
     }
 
     public void alterar(String nome, int idade, double notaUltimaProva){
-        Aluno aluno = buscarAluno(nome);
+        Alun aluno = buscarAluno(nome);
 
         if (aluno == null) {
             System.out.println("\nAluno não encontrado");
@@ -137,7 +137,7 @@ class Escola{
     }
 
     public void excluir (String nome){
-        Aluno aluno = buscarAluno(nome);
+        Alun aluno = buscarAluno(nome);
 
         if (aluno == null) {
             System.out.println("\nAluno não encontrado");
