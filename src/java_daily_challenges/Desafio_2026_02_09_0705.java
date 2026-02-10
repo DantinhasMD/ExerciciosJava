@@ -8,7 +8,9 @@ Data: 2026_02_09_0705
 ========================================
 
 ENUNCIADO:
-Um sistema de gerenciamento de estoque precisa manter a quantidade de produtos em estoque e atualizar a quantidade quando um produto é comprado ou vendido. O sistema deve verificar se há produtos suficientes em estoque antes de realizar a venda.
+Um sistema de gerenciamento de estoque precisa manter a quantidade de produtos em estoque e
+atualizar a quantidade quando um produto é comprado ou vendido. O sistema deve verificar se
+há produtos suficientes em estoque antes de realizar a venda.
 
 CONCEITOS:
 - excecoes

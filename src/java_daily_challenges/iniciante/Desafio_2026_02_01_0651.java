@@ -26,11 +26,11 @@ Entrada: Criar pedido com 2 produtos: 1 x produto A ($10) e 1 x produto B ($20) 
 Entrada: Criar pedido com 10 produtos: 5 x produto A ($10) e 5 x produto B ($20) | Saída esperada: Pedido criado com sucesso. Total: $150
 Entrada: Criar pedido com produto inválido (preço negativo) | Saída esperada: Erro: preço inválido para produto A
 */
-class Produto{
+class Produtto{
     private String nome;
     private double preco;
 
-    public Produto(String nome, double preco) {
+    public Produtto(String nome, double preco) {
         if (preco < 0) {
             throw new IllegalArgumentException("Erro: preço inválido para produto " + nome);
         }
@@ -51,10 +51,10 @@ class Produto{
 }
 
 class ItemPedido {
-    private Produto produto;
+    private Produtto produto;
     private int quantidade;
 
-    public ItemPedido(Produto produto, int quantidade) {
+    public ItemPedido(Produtto produto, int quantidade) {
         if (quantidade <= 0) {
             throw new IllegalArgumentException("Quantidade inválida para o produto " + produto.getNome());
         }
@@ -107,17 +107,17 @@ class Pedido{
     }
 }
 
-class Loja{
-    List<Produto> produtos = new ArrayList<>();
+class Lojja{
+    List<Produtto> produtos = new ArrayList<>();
     List<Pedido> pedidos = new ArrayList<>();
 
     public void adicionarProduto(String nome, double preco) {
-        Produto produto = new Produto(nome, preco);
+        Produtto produto = new Produtto(nome, preco);
         produtos.add(produto);
     }
 
-    public Produto buscarProdutoPorNome(String nome) {
-        for (Produto p : produtos) {
+    public Produtto buscarProdutoPorNome(String nome) {
+        for (Produtto p : produtos) {
             if (p.getNome().equalsIgnoreCase(nome)) {
                 return p;
             }
@@ -127,7 +127,7 @@ class Loja{
 
     public void listarProdutos() {
         System.out.println("\nProdutos disponíveis:");
-        for (Produto p : produtos) {
+        for (Produtto p : produtos) {
             System.out.println(p.exibirInformacoes());
         }
     }
@@ -139,7 +139,7 @@ class Loja{
 
 public class Desafio_2026_02_01_0651 {
     public static void main(String[] args) {
-        Loja loja = new Loja();
+        Lojja loja = new Lojja();
 
         loja.adicionarProduto("Camiseta", 10);
         loja.adicionarProduto("Calça", 20);
@@ -159,7 +159,7 @@ public class Desafio_2026_02_01_0651 {
             String nomeProduto = sc.nextLine();
             if (nomeProduto.equalsIgnoreCase("fim")) break;
 
-            Produto produto = loja.buscarProdutoPorNome(nomeProduto);
+            Produtto produto = loja.buscarProdutoPorNome(nomeProduto);
             if (produto == null) {
                 System.out.println("Produto não encontrado!\n");
                 continue;

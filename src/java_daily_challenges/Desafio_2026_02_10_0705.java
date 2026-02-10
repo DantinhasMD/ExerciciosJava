@@ -8,7 +8,9 @@ Data: 2026_02_10_0705
 ========================================
 
 ENUNCIADO:
-Um sistema de gerenciamento de estoque de produtos deve permitir que os usuários adicionem e removam produtos do estoque, e também devem verificar se há produtos suficientes para atender a uma ordem de compra.
+Um sistema de gerenciamento de estoque de produtos deve permitir que os usuários adicionem e removam
+produtos do estoque, e também devem verificar se há produtos suficientes para atender
+a uma ordem de compra.
 
 CONCEITOS:
 - exceções
