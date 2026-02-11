@@ -1,4 +1,4 @@
-package java_daily_challenges;
+package java_daily_challenges.iniciante;
 
 import java.util.*;
 
@@ -66,11 +66,11 @@ class Car {
     }
 }
 
-class Cliente {
+class Cliennte {
     private String nome;
     private int idade;
 
-    public Cliente (String nome, int idade) {
+    public Cliennte (String nome, int idade) {
         this.nome = nome;
         this.idade = idade;
     }
@@ -86,8 +86,8 @@ class Cliente {
 
 class Locadora {
     List<Car> carros = new ArrayList<>();
-    List<Cliente> clientes = new ArrayList<>();
-    Map<Cliente, Car> alugados = new HashMap<>();
+    List<Cliennte> clientes = new ArrayList<>();
+    Map<Cliennte, Car> alugados = new HashMap<>();
 
     public void adicionarCarro(String placa, String marca, String modelo, double precoLocacao){
         if (placa.isEmpty() || placa == null) {
@@ -138,7 +138,7 @@ class Locadora {
         }
 
         if (!existe){
-            clientes.add(new Cliente(nome, idade));
+            clientes.add(new Cliennte(nome, idade));
             System.out.println("\nCliente adicionado!");
         }
     }
@@ -170,7 +170,7 @@ class Locadora {
 
         for (Car c: carros){
             if (c.getPlaca().equalsIgnoreCase(carro)){
-                for (Cliente l: clientes){
+                for (Cliennte l: clientes){
                     if (l.getNome().equalsIgnoreCase(cliente)){
                         c.setDisponivel(false);
                         alugados.put(l, c);
@@ -190,7 +190,6 @@ class Locadora {
         }
     }
 }
-
 
 public class Desafio_2026_02_08_0651 {
     public static void main(String[] args) {
