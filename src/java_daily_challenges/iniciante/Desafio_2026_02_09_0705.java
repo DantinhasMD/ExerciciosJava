@@ -1,4 +1,4 @@
-package java_daily_challenges;
+package java_daily_challenges.iniciante;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -53,7 +53,7 @@ class Produu {
     }
 }
 
-class Estoque {
+class Estoqque {
     Map<String, Produu> produtos = new HashMap<>();
 
     public void adicionarProduto(String nome, int qtd){
@@ -144,7 +144,7 @@ class Estoque {
 
 public class Desafio_2026_02_09_0705 {
     public static void main(String[] args) {
-        Estoque estoque = new Estoque();
+        Estoqque estoque = new Estoqque();
 
         Scanner sc = new Scanner(System.in);
         int opc;
