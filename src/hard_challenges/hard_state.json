@@ -1,13 +1,13 @@
 {
-    "total_exercicios": 2,
-    "ultimo_exercicio": "2026-02-09",
+    "total_exercicios": 3,
+    "ultimo_exercicio": "2026-02-23",
     "conceitos_contador": {
         "collections_list": 1,
         "collections_set": 1,
         "collections_map": 1,
         "collections_queue": 1,
-        "tratamento_erros": 0,
-        "excecoes_api": 0,
+        "tratamento_erros": 1,
+        "excecoes_api": 1,
         "consumo_api": 0,
         "threads": 0
     }
