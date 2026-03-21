@@ -1,11 +1,11 @@
 {
     "nivel_atual": "iniciante",
     "ultima_analise": "2026-01-28",
-    "exercicios_desde_analise": 34,
+    "exercicios_desde_analise": 35,
     "conceitos_contador": {
         "variaveis": 12,
         "condicionais": 13,
-        "loops": 12,
+        "loops": 13,
         "entrada_saida_console": 12,
         "listas": 12,
         "mapas": 12,
